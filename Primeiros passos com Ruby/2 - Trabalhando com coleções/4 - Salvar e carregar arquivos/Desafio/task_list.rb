@@ -38,7 +38,20 @@ def change_status(tarefa)
   tarefa[:status] = true
 end
 
-tarefas = []
+def load_tarefas
+  tarefas = []
+  if File.exist?('task.txt')
+    file = File.read('task.txt')
+    lines = file.split("\n")
+    lines.each do |line|
+      registers = line.split('||')
+      tarefas[registers[0].to_i] = {name:registers[1], status: (registers[2] == 'true' ? true : false)}
+    end
+  end
+  tarefas
+end
+
+tarefas = load_tarefas
 
 while true do
 
@@ -48,9 +61,13 @@ while true do
   when 1
     print 'Digite sua tarefa: '
     tarefa = gets.strip
-    tarefas << { name:tarefa, status:false }
     system('clear')
-    puts 'Tarefa cadastrada: ' + tarefa
+    if /\|\|/.match?(tarefa)
+      puts "Caracteres não permitidos '||'"
+    else
+      tarefas << { name:tarefa, status:false }
+      puts 'Tarefa cadastrada: ' + tarefa
+    end
   when 2
     system('clear')
     if tarefas.length == 0
@@ -94,6 +111,14 @@ while true do
       puts 'Tarefa não encontrada.'
     end
   when 5
+    File.open('task.txt', 'w') do |file|
+      tarefas.each_with_index do |item, index|
+        file.write("#{index}||#{item[:name]}||#{item[:status]}\n")
+      end
+    end
+    system('clear')
+    puts 'Tarefas foram salvas'
+    puts
     break
   else
     system('clear')
