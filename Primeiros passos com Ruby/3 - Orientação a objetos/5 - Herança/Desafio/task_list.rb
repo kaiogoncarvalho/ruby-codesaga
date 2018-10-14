@@ -5,6 +5,14 @@ require_relative 'tasks'
 option = Tasks.menu
 tasks = Tasks.load
 
+def search(array, searches)
+  results = []
+  searches.each do |item|
+    results[array.find_index{ |i| i.object_id == item.object_id }] = item
+  end
+  results
+end
+
 while option != 5 do
   system('clear')
   if option == 1
@@ -23,13 +31,13 @@ while option != 5 do
     puts tasks.find_all { |task| task.description.downcase.include? search }
   elsif option == 4
     puts
-
-    tasks.each_with_index do |task, index|
+    search_tasks = tasks.find_all { |task| task.status == false }
+    search_tasks.each_with_index do |task, index|
       puts "##{index + 1} - #{task.description}"
     end
-    print 'Qual o número da tarefa que deseja marcar como feita:'
+    print 'Qual o número da tarefa que deseja marcar como feita: '
     index = gets.to_i
-    task = tasks[index - 1]
+    task = search_tasks[index - 1]
     if task && index > 0
       task.mark_as_done
       puts 'Tarefa marcada como feita!'
