@@ -1,4 +1,5 @@
 require_relative 'task'
+require_relative 'task_deadline'
 require_relative 'tasks'
 
 def menu()
@@ -19,10 +20,7 @@ tasks = Tasks.load
 
 while option != 5 do
   if option == 1
-    print 'Digite sua tarefa: '
-    task_description = gets.chomp
-    puts 'Tarefa cadastrada: ' + task_description
-    tasks << Task.new(description: task_description, status: false)
+    tasks << Tasks.create
   elsif option == 2
     puts
     puts 'Lista de tarefas: '

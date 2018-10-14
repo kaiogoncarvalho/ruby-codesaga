@@ -25,4 +25,8 @@ class Task
     @status = true
   end
 
+  def save
+    "#{@description}||#{@status}"
+  end
+
 end
