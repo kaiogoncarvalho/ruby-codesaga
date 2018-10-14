@@ -1,33 +1,38 @@
 class Tasks
-  def self.create()
-    print 'Digite sua tarefa: '
-    task_description = gets.chomp
-    deadline = self.deadline
+  def self.menu()
+    puts "Bem-vindo ao Task List! Escolha uma opção no menu: \n"
+    puts '[1] Inserir uma tarefa'
+    puts '[2] Ver todas as tarefas'
+    puts '[3] Buscar tarefa'
+    puts '[4] Marcar tarefa como feita'
+    puts '[5] Sair'
+    puts
+    print 'Escolha uma opção: '
+
+    gets.to_i
+  end
+
+  def self.create(description:,deadline:,status:)
     if deadline
-      task = TaskDeadline.new(description: task_description, deadline: deadline, status: false)
+      TaskDeadline.new(description: description, deadline: deadline, status: status)
     else
-      task = Task.new(description: task_description, status: false)
+      Task.new(description: description, status: status)
     end
-    puts 'Tarefa cadastrada: ' + task_description
-    task
+
   end
 
   def self.deadline
     print 'Deseja informar o Prazo (y/n): '
     option = gets.strip
     if option.downcase == 'y'
-      print 'Informe o Prazo (dd/mm/aaaa): '
+      print 'Informe o Prazo: '
       deadline = gets.strip
     elsif option.downcase == 'n'
-      return false
+      false
     else
       puts 'Opção inválida, informe "y" ou "n"'
-      return self.deadline
+      self.deadline
     end
-  end
-
-  def self.search(tasks:, search:)
-    puts tasks.find_all { |task| task.description.downcase.include? search }
   end
 
   def self.save(tasks)
@@ -58,4 +63,5 @@ class Tasks
     end
     tasks
   end
+
 end

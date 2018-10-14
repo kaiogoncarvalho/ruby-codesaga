@@ -2,37 +2,28 @@ require_relative 'task'
 require_relative 'task_deadline'
 require_relative 'tasks'
 
-def menu()
-  puts "Bem-vindo ao Task List! Escolha uma opção no menu: \n"
-  puts '[1] Inserir uma tarefa'
-  puts '[2] Ver todas as tarefas'
-  puts '[3] Buscar tarefa'
-  puts '[4] Marcar tarefa como feita'
-  puts '[5] Sair'
-  puts
-  print 'Escolha uma opção: '
-
-  gets.to_i
-end
-
-option = menu
+option = Tasks.menu
 tasks = Tasks.load
 
 while option != 5 do
+  system('clear')
   if option == 1
-    tasks << Tasks.create
+    print 'Digite sua tarefa: '
+    task_description = gets.chomp
+    deadline = Tasks.deadline
+    tasks << Tasks.create(description: task_description, deadline: deadline, status: false)
   elsif option == 2
     puts
     puts 'Lista de tarefas: '
-    tasks.each do |task|
-      puts "#{task.to_s}"
-    end
+    puts tasks.each {|task| task.to_s}
   elsif option == 3
     puts
     print 'Digite o texto que deseja buscar: '
-    Tasks.search(tasks: tasks, search: gets.strip)
+    search = gets.strip
+    puts tasks.find_all { |task| task.description.downcase.include? search }
   elsif option == 4
     puts
+
     tasks.each_with_index do |task, index|
       puts "##{index + 1} - #{task.description}"
     end
@@ -51,7 +42,7 @@ while option != 5 do
     puts
   end
   puts
-  option = menu
+  option = Tasks.menu
 end
 
 Tasks.save(tasks)
